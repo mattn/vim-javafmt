@@ -6,6 +6,10 @@ if !exists("g:javafmt_program")
   let g:javafmt_program = 'java -jar ' . globpath(&rtp, 'lib/google-java-format*.jar')
 endif
 
+if !exists("g:javafmt_options")
+  let g:javafmt_options = ''
+endif
+
 function! s:javafmt(...) abort
   let files = []
   for arg in a:000
@@ -15,7 +19,7 @@ function! s:javafmt(...) abort
     let files = ['%']
   endif
   let files = map(files, 'shellescape(expand(v:val))')
-  let lines = system(g:javafmt_program . ' ' . join(files, ' '))
+  let lines = system(g:javafmt_program . ' ' . g:javafmt_options . ' ' . join(files, ' '))
   if v:shell_error == 0
     let pos = getcurpos()
     silent! %d _
