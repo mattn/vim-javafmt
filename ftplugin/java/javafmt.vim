@@ -18,8 +18,10 @@ function! s:javafmt(...) abort
     echohl None
     return
   endif
+  call setqflist([])
   if len(a:000) == 0
-    let lines = system(g:javafmt_program . ' ' . g:javafmt_options . ' - ' . expand('%'))
+    let lines = system(g:javafmt_program . ' ' . g:javafmt_options . ' - ', getline(1, '$'))
+    let lines = join(map(split(lines, "\n"), 'substitute(v:val, "^<stdin>:", expand("%:gs!\\!/!") . ":", "g")'), "\n")
   else
     let files = []
     for arg in a:000
