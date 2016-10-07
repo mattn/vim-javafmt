@@ -11,8 +11,15 @@ if !exists("g:javafmt_options")
 endif
 
 function! s:javafmt(...) abort
+  if empty(globpath(&rtp, 'lib/google-java-format*.jar'))
+    echohl ErrorMsg
+    redraw
+    echomsg "Please download google-java-format and place in .vim/lib"
+    echohl None
+    return
+  endif
   if len(a:000) == 0
-    let lines = system(g:javafmt_program . ' ' . g:javafmt_options . ' - ', getline(1, '$'))
+    let lines = system(g:javafmt_program . ' ' . g:javafmt_options . ' - ' . expand('%'))
   else
     let files = []
     for arg in a:000
@@ -26,6 +33,9 @@ function! s:javafmt(...) abort
     silent! %d _
     call setline(1, split(lines, "\n"))
     call setpos('.', pos)
+  else
+    cexp lines
+    cwindow
   endif
 endfunction
 
