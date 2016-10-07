@@ -37,7 +37,11 @@ function! s:javafmt(...) abort
     call setpos('.', pos)
   else
     cexp lines
-    cwindow
+  endif
+  if len(getqflist()) > 0
+    copen | cc
+  else
+    cclose
   endif
 endfunction
 
